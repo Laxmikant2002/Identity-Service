@@ -1,58 +1,48 @@
 # FluxKart Identity Service
 
-A comprehensive web service for consolidating customer identities across multiple purchases on FluxKart.com. This service intelligently links customer contacts based on shared email addresses and phone numbers, solving the challenge of identifying when different contact information belongs to the same person.
+A web service for consolidating customer identities based on email and phone number.
 
-## 🎯 Problem Statement
+## Problem Statement
 
-When customers like Dr. Emmett Brown make multiple purchases using different email addresses and phone numbers, FluxKart needs to:
+When customers make multiple purchases using different email addresses and phone numbers, FluxKart needs to:
 - Link these separate contacts to the same identity
 - Maintain a primary contact record (oldest contact)
 - Track all associated email addresses and phone numbers
 - Provide a unified view of customer identity
 
-## 🚀 Features
+## Features
 
-- **Identity Reconciliation**: Links contacts based on shared email or phone numbers
-- **Primary Contact Management**: Designates oldest contact as primary
-- **Contact Merging**: Intelligently merges separate identity groups when new information connects them
-- **RESTful API**: Single `/identify` endpoint for all identity operations
-- **MySQL Integration**: Robust database storage with TypeORM
-- **Data Validation**: Comprehensive input validation for email and phone formats
-- **Soft Deletes**: Support for soft deletion of contacts
+- Identity Reconciliation: Links contacts based on shared email or phone numbers
+- Primary Contact Management: Designates oldest contact as primary
+- Contact Merging: Merges separate identity groups when new information connects them
+- RESTful API: Single `/identify` endpoint for all identity operations
+- Database Integration: Robust database storage with TypeORM
+- Data Validation: Input validation for email and phone formats
 
-## 🏗️ Technical Stack
+## Technical Stack
 
-- **Backend**: Node.js with TypeScript
-- **Framework**: Express.js
-- **Database**: MySQL with TypeORM ORM
-- **Validation**: Custom middleware with format validation
-- **Environment**: dotenv for configuration management
+- Backend: Node.js with TypeScript
+- Framework: Express.js
+- Database: MySQL/SQLite with TypeORM
+- Validation: Custom middleware with format validation
+- Environment: dotenv for configuration management
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Node.js (v14 or higher)
-- MySQL server (v5.7 or higher)
-- npm or yarn package manager
+- MySQL server (v5.7 or higher) or SQLite for development
+- npm package manager
 
-## 🛠️ Installation & Setup
-
-### 1. Clone and Install Dependencies
+## Installation
 
 ```bash
-cd fluxkart-identity-service
 npm install
 ```
 
-### 2. Database Setup
+## Configuration
 
-Create a MySQL database:
-```sql
-CREATE DATABASE fluxkart_identity;
-```
+Configure the `.env` file with your database credentials:
 
-### 3. Environment Configuration
-
-Update the `.env` file with your database credentials:
 ```env
 # Database Configuration
 DB_HOST=localhost
@@ -66,20 +56,20 @@ NODE_ENV=development
 PORT=3000
 ```
 
-### 4. Start the Service
-
-#### Development Mode (with auto-reload)
-```bash
-npm run dev
+For production, create a MySQL database:
+```sql
+CREATE DATABASE fluxkart_identity;
 ```
 
-#### Production Mode
+## Usage
+
+Build and start the service:
 ```bash
 npm run build
 npm start
 ```
 
-## 📡 API Documentation
+## API Documentation
 
 ### POST `/api/identify`
 
@@ -88,21 +78,21 @@ Consolidates customer identity based on provided email and/or phone number.
 #### Request Format
 ```json
 {
-  "email": "emmett@doc.com",
-  "phoneNumber": "123456"
+  "email": "user@example.com",
+  "phoneNumber": "1234567890"
 }
 ```
 
-**Note**: At least one of `email` or `phoneNumber` must be provided.
+Note: At least one of `email` or `phoneNumber` must be provided.
 
 #### Response Format
 ```json
 {
   "contact": {
     "primaryContactId": 1,
-    "emails": ["emmett@doc.com", "brown@hill-valley.edu"],
-    "phoneNumbers": ["123456", "17504205555"],
-    "secondaryContactIds": [23, 27]
+    "emails": ["user@example.com", "user2@example.com"],
+    "phoneNumbers": ["1234567890", "9876543210"],
+    "secondaryContactIds": [2, 3]
   }
 }
 ```
@@ -113,9 +103,10 @@ Consolidates customer identity based on provided email and/or phone number.
 - `phoneNumbers`: Array of all unique phone numbers, with primary contact's phone first
 - `secondaryContactIds`: Array of all secondary contact IDs linked to the primary
 
-### Health Check Endpoint
+### GET `/health`
 
-#### GET `/health`
+Health check endpoint.
+
 ```json
 {
   "status": "OK",
@@ -123,7 +114,7 @@ Consolidates customer identity based on provided email and/or phone number.
 }
 ```
 
-## 🧠 Identity Logic
+## Identity Logic
 
 The service handles three main scenarios:
 
@@ -131,7 +122,7 @@ The service handles three main scenarios:
 2. **Existing Customer**: Creates secondary contacts linked to existing primary when new information is provided
 3. **Identity Merging**: Merges separate identity groups when connections are discovered, maintaining the oldest contact as primary
 
-## 📊 Database Schema
+## Database Schema
 
 ### Contact Table
 ```sql
@@ -150,59 +141,37 @@ CREATE TABLE contact (
 );
 ```
 
-## 💻 Usage Example
-
-```bash
-curl -X POST http://localhost:3000/api/identify \
-  -H "Content-Type: application/json" \
-  -d '{"email": "user@example.com", "phoneNumber": "1234567890"}'
-```
-
-## 🔧 Project Structure
+## Project Structure
 
 ```
-fluxkart-identity-service/
-├── src/
-│   ├── entities/
-│   │   └── Contact.ts          # TypeORM Contact entity
-│   ├── controllers/
-│   │   └── identityController.ts
-│   ├── services/
-│   │   └── identityService.ts  # Core business logic
-│   ├── routes/
-│   │   └── identityRoutes.ts   # API routes
-│   ├── middleware/
-│   │   └── validation.ts       # Input validation
-│   ├── types/
-│   │   └── index.ts           # TypeScript interfaces
-│   ├── data-source.ts         # Database configuration
-│   └── app.ts                 # Main application
-├── .env                       # Environment variables
-├── .gitignore
-├── package.json
-├── tsconfig.json
-└── README.md
+src/
+├── entities/Contact.ts          # Contact entity
+├── controllers/identityController.ts
+├── services/identityService.ts  # Core business logic
+├── routes/identityRoutes.ts
+├── middleware/validation.ts
+├── types/index.ts
+├── data-source.ts              # Database config
+└── app.ts                      # Main application
 ```
 
-## 🚦 Error Handling
-
-The service includes comprehensive error handling:
+## Error Handling
 
 - **400 Bad Request**: Invalid input format or missing required fields
 - **500 Internal Server Error**: Database or server errors
 - **404 Not Found**: Invalid API endpoints
 
-## 🔒 Validation Rules
+## Validation Rules
 
 ### Email Validation
-- Must be a valid email format (`user@domain.com`)
-- Basic regex pattern: `/^[^\s@]+@[^\s@]+\.[^\s@]+$/`
+- Must be a valid email format
+- Pattern: `/^[^\s@]+@[^\s@]+\.[^\s@]+$/`
 
 ### Phone Number Validation
 - Allows digits, spaces, hyphens, parentheses, and plus signs
 - Minimum 7 digits after removing non-numeric characters
 - Pattern: `/^[\+]?[\d\s\-\(\)]+$/`
 
-##  License
+## License
 
-ISC License - see LICENSE file for details
+ISC License
