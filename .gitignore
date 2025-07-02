@@ -39,8 +39,17 @@ logs/
 *.db
 fluxkart_identity.db
 
-# Test files
+# Test and documentation files
+TEST_*.md
+*_TEST.md
+*_TESTS.md
+TEST_INFORMATION.md
 TEST_COLLECTION.md
 run-tests.ps1
 *.test.ts
 *.spec.ts
+
+# Personal/Demo files
+*demo*
+*example*
+*sample*
