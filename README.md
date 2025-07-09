@@ -35,39 +35,87 @@ When customers make multiple purchases using different email addresses and phone
 
 ## Installation
 
+1. Clone the repository
+2. Install dependencies:
 ```bash
 npm install
 ```
 
+3. Copy environment configuration:
+```bash
+cp .env.example .env
+```
+
+4. For development (uses SQLite):
+```bash
+npm run dev
+```
+
+5. For production (requires MySQL configuration in .env):
+```bash
+npm run build
+npm start
+```
+
 ## Configuration
 
-Configure the `.env` file with your database credentials:
+1. Copy the environment template:
+```bash
+cp .env.example .env
+```
+
+2. For development, the default settings work with SQLite (no additional configuration needed).
+
+3. For production with MySQL, update `.env` with your database credentials:
 
 ```env
-# Database Configuration
+NODE_ENV=production
 DB_HOST=localhost
 DB_PORT=3306
 DB_USERNAME=root
 DB_PASSWORD=your_mysql_password
 DB_NAME=fluxkart_identity
-
-# Application Configuration
-NODE_ENV=development
 PORT=3000
 ```
 
-For production, create a MySQL database:
+Create the MySQL database:
 ```sql
 CREATE DATABASE fluxkart_identity;
 ```
 
+## Docker Deployment
+
+For containerized deployment:
+
+```bash
+# Build and start with Docker Compose (includes MySQL)
+docker-compose up -d
+
+# Or build Docker image manually
+docker build -t fluxkart-identity-service .
+docker run -p 3000:3000 -e NODE_ENV=development fluxkart-identity-service
+```
+
 ## Usage
 
-Build and start the service:
+### Development
+```bash
+npm run dev          # Build and start once
+npm run dev:watch    # Build in watch mode
+```
+
+### Production
 ```bash
 npm run build
 npm start
 ```
+
+### Available Scripts
+- `npm run build` - Compile TypeScript to JavaScript
+- `npm run start` - Start the production server
+- `npm run dev` - Build and start for development
+- `npm run dev:watch` - Build in watch mode
+- `npm run clean` - Remove build artifacts
 
 ## API Documentation
 
