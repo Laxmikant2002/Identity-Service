@@ -48,6 +48,7 @@ TEST_*.md
 TEST_INFORMATION.md
 TEST_COLLECTION.md
 run-tests.ps1
+test-api.js
 *.test.ts
 *.spec.ts
 
