@@ -2,6 +2,25 @@
 
 A web service for consolidating customer identities based on email and phone number.
 
+## 🚀 **Live Deployment**
+
+**Production API Endpoint**: `https://fluxkart-identity-service.onrender.com`
+
+**API Endpoints:**
+- **Identity Service**: `POST https://fluxkart-identity-service.onrender.com/api/identify`
+- **Health Check**: `GET https://fluxkart-identity-service.onrender.com/health`
+
+> **Note**: Please use **JSON Body** format (not form-data) for all API requests.
+
+### Quick Test
+
+```bash
+# Test the live API endpoint
+curl -X POST https://fluxkart-identity-service.onrender.com/api/identify \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","phoneNumber":"1234567890"}'
+```
+
 ## Problem Statement
 
 When customers make multiple purchases using different email addresses and phone numbers, FluxKart needs to:

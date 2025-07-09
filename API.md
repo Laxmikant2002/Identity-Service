@@ -1,8 +1,10 @@
 # API Documentation
 
 ## Base URL
-- Development: `http://localhost:3000`
-- Production: `https://your-domain.com`
+- **Production**: `https://fluxkart-identity-service.onrender.com`
+- **Development**: `http://localhost:3000`
+
+> **Important**: Use **JSON Body** format for all POST requests, not form-data.
 
 ## Endpoints
 
