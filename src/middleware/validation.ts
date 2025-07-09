@@ -2,6 +2,13 @@ import { Request, Response, NextFunction } from 'express';
 import { IdentifyRequest } from '../types';
 
 export const validateIdentifyRequest = (req: Request, res: Response, next: NextFunction) => {
+    // Ensure request has JSON body
+    if (!req.body || typeof req.body !== 'object') {
+        return res.status(400).json({
+            error: 'Request body must be valid JSON'
+        });
+    }
+
     const { email, phoneNumber }: IdentifyRequest = req.body;
 
     // At least one of email or phoneNumber must be provided

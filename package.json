@@ -9,7 +9,8 @@
     "dev": "tsc && node dist/app.js",
     "dev:watch": "tsc --watch",
     "clean": "rimraf dist",
-    "prebuild": "npm run clean"
+    "prebuild": "npm run clean",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "cors": "^2.8.5",
